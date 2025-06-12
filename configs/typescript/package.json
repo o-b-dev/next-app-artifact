@@ -1,8 +1,8 @@
 {
-  "name": "@workspace/typescript-config",
+  "name": "@workspace/configs-typescript",
   "version": "0.0.0",
   "private": true,
-  "license": "PROPRIETARY",
+  "license": "MIT",
   "publishConfig": {
     "access": "public"
   }

@@ -3,17 +3,31 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
+    "apps:start": "turbo start",
     "build": "turbo build",
+    "check-types": "turbo check-types",
     "dev": "turbo dev",
+    "format": "prettier --write \"**/*.{ts,tsx,md,json,js,jsx,css,mjs,cjs}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,md,json,js,jsx,css,mjs,cjs}\"",
+    "i18n": "turbo i18n",
     "lint": "turbo lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "lint:fix": "turbo lint:fix",
+    "lint:workspace": "eslint .",
+    "lint:workspace:fix": "eslint . --fix",
+    "package:build": "turbo package:build",
+    "package:dev": "turbo package:dev",
+    "start": "pnpm tasks && pnpm lint:fix && pnpm dev",
+    "tasks": "turbo tasks",
+    "types": "turbo types"
   },
   "devDependencies": {
-    "@workspace/eslint-config": "workspace:*",
-    "@workspace/typescript-config": "workspace:*",
+    "@workspace/configs-eslint": "workspace:*",
+    "@workspace/configs-typescript": "workspace:*",
     "prettier": "^3.5.3",
+    "prettier-plugin-packagejson": "^2.5.15",
+    "prettier-plugin-tailwindcss": "^0.6.12",
     "turbo": "^2.5.4",
-    "typescript": "5.7.3"
+    "typescript": "catalog:"
   },
   "packageManager": "pnpm@10.12.1",
   "engines": {
