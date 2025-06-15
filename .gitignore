@@ -27,6 +27,8 @@ out/
 build
 dist
 
+# i18n
+**/messages/*.d.json.ts
 
 # Debug
 npm-debug.log*
