@@ -31,8 +31,12 @@ export default async function LocaleLayout({
   }
 
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${fontSans.variable} ${fontMono.variable} font-sans antialiased`}>
+    <html
+      lang={locale}
+      className={`${fontSans.variable} ${fontMono.variable} font-sans antialiased`}
+      suppressHydrationWarning
+    >
+      <body suppressHydrationWarning>
         <AppProviders>{children}</AppProviders>
       </body>
     </html>
