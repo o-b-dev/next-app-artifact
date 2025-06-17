@@ -28,7 +28,19 @@ export const nextJsConfig = defineConfig([
     },
     rules: {
       ...pluginNext.configs.recommended.rules,
-      ...pluginNext.configs['core-web-vitals'].rules
+      ...pluginNext.configs['core-web-vitals'].rules,
+      'no-restricted-imports': [
+        'error',
+        {
+          name: 'next/link',
+          message: 'Please import from `@/features/i18n` instead.'
+        },
+        {
+          name: 'next/navigation',
+          importNames: ['redirect', 'permanentRedirect', 'useRouter', 'usePathname'],
+          message: 'Please import from `@/features/i18n` instead.'
+        }
+      ]
     }
   },
   globalIgnores(['**/*.d.json.ts']),
