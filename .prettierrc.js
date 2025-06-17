@@ -7,6 +7,7 @@ module.exports = {
     singleQuote: true,
     trailingComma: 'none',
     plugins: ['prettier-plugin-packagejson', 'prettier-plugin-tailwindcss'],
+    tailwindFunctions: ['tv']
   }
   
 
