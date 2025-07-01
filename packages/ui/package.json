@@ -33,6 +33,7 @@
     "@types/react-dom": "catalog:",
     "@workspace/configs-eslint": "workspace:*",
     "@workspace/configs-typescript": "workspace:*",
+    "eslint": "catalog:",
     "tailwindcss": "catalog:",
     "typescript": "catalog:"
   }
