@@ -1,9 +1,10 @@
 import type { UIMessage } from 'ai'
 import { convertToModelMessages, streamText } from 'ai'
 
+import { withAIErrorHandling } from '../../middleware'
 import { getGoogleModel } from '../../utils/model'
 
-export async function POST(req: Request) {
+export const POST = withAIErrorHandling(async (req: Request) => {
   const { messages } = (await req.json()) as { messages: UIMessage[] }
 
   const result = streamText({
@@ -13,4 +14,4 @@ export async function POST(req: Request) {
   })
 
   return result.toUIMessageStreamResponse()
-}
+})

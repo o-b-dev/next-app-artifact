@@ -30,7 +30,11 @@ export const config = defineConfig([
         'error',
         {
           selector: 'typeLike',
-          format: ['PascalCase']
+          format: ['PascalCase'],
+          filter: {
+            regex: '^(?!.*_ENUM$).*',
+            match: true
+          }
         }
       ]
     }

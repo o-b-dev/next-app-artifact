@@ -5,6 +5,8 @@ import { Button } from '@workspace/ui/components/button'
 import { Input } from '@workspace/ui/components/input'
 import { useForm } from 'react-hook-form'
 
+import Markdown from '@/features/markdown/components'
+
 // 定义表单数据类型
 interface MessageFormData {
   message: string
@@ -56,13 +58,17 @@ export default function ArtifactChat() {
           {message.parts.map((part, i) => {
             switch (part.type) {
               case 'text':
-                return <div key={`${message.id}-${i}`}>{part.text}</div>
+                return (
+                  <div key={`${message.id}-${i}`}>
+                    <Markdown content={part.text} />
+                  </div>
+                )
             }
           })}
         </div>
       ))}
 
-      <div className="bg-background fixed bottom-0 left-1/2 w-full -translate-x-1/2 p-4">
+      <div className="bg-background fixed bottom-0 left-1/2 w-full max-w-screen-lg -translate-x-1/2 p-4">
         <form onSubmit={(e) => void form.handleSubmit(handleSubmit)(e)} className="flex gap-2">
           <div className="flex-1">
             <Input
