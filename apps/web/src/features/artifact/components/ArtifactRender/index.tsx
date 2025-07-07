@@ -1,5 +1,6 @@
 'use client'
 
+import { cn } from '@workspace/ui/lib/utils'
 import { useEffect, useRef, useState } from 'react'
 import type { RunnerProps } from 'react-runner'
 
@@ -60,7 +61,15 @@ export default function ArtifactRender({ code }: ArtifactRenderProps) {
 
   return (
     <div className="w-full rounded border border-zinc-500 bg-zinc-900 p-4">
-      <iframe ref={iframeRef} src="http://localhost:3000" className="min-h-[70vh] w-full" title="Artifact Preview" />
+      <p className={cn('flex min-h-[70vh] w-full items-center justify-center text-center', isIframeReady && 'hidden')}>
+        loading...
+      </p>
+      <iframe
+        ref={iframeRef}
+        src="http://localhost:3000"
+        className={cn('min-h-[70vh] w-full', !isIframeReady && 'hidden')}
+        title="Artifact Preview"
+      />
     </div>
   )
 }
