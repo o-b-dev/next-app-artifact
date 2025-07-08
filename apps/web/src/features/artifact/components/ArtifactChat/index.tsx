@@ -3,17 +3,25 @@
 import { useChat } from '@ai-sdk/react'
 import { Button } from '@workspace/ui/components/button'
 import { Input } from '@workspace/ui/components/input'
+import { cn } from '@workspace/ui/lib/utils'
+import { useEffect, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 
 import Markdown from '@/features/markdown/components'
+
+export interface IArtifactChatProps {
+  autoScroll?: boolean
+  messageBoxClassName?: string
+}
 
 // 定义表单数据类型
 interface MessageFormData {
   message: string
 }
 
-export default function ArtifactChat() {
+export default function ArtifactChat({ autoScroll = false, messageBoxClassName }: IArtifactChatProps) {
   const { messages, sendMessage, stop } = useChat()
+  const messagesEndRef = useRef<HTMLDivElement>(null)
 
   // 初始化表单
   const form = useForm<MessageFormData>({
@@ -21,6 +29,18 @@ export default function ArtifactChat() {
       message: ''
     }
   })
+
+  // 自动滚动到底部
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView()
+  }
+
+  // 监听消息变化，自动滚动
+  useEffect(() => {
+    if (autoScroll) {
+      scrollToBottom()
+    }
+  }, [messages, autoScroll])
 
   const handleSubmit = async (data: MessageFormData) => {
     // 基本验证
@@ -33,6 +53,8 @@ export default function ArtifactChat() {
       form.setError('message', { message: '消息长度不能超过1000个字符' })
       return
     }
+
+    form.resetField('message')
 
     try {
       await sendMessage({
@@ -50,7 +72,10 @@ export default function ArtifactChat() {
       {messages.map((message) => (
         <div
           key={message.id}
-          className="flex flex-col gap-2 whitespace-pre-wrap rounded border border-zinc-800 bg-zinc-900 p-2"
+          className={cn(
+            'flex flex-col gap-2 whitespace-pre-wrap rounded border border-zinc-800 bg-zinc-900 p-2',
+            messageBoxClassName
+          )}
         >
           <strong className="border-zinc-750 border-b pb-2 text-sm text-zinc-400">
             {message.role === 'user' ? 'User: ' : 'AI: '}
@@ -67,6 +92,9 @@ export default function ArtifactChat() {
           })}
         </div>
       ))}
+
+      {/* 用于自动滚动的锚点元素 */}
+      <div ref={messagesEndRef} />
 
       <div className="bg-background fixed bottom-0 left-1/2 w-full max-w-screen-lg -translate-x-1/2 p-4">
         <form onSubmit={(e) => void form.handleSubmit(handleSubmit)(e)} className="flex gap-2">

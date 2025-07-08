@@ -11,7 +11,7 @@ export const components: {
   code: MarkdownCode,
 
   p: ({ children, ...props }) => (
-    <div className="leading-7 [&:not(:first-child)]:mt-6" {...props}>
+    <div className="leading-7" {...props}>
       {children}
     </div>
   ),
