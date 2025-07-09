@@ -28,7 +28,7 @@ export default function ArtifactRender({ code }: ArtifactRenderProps) {
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
       // 验证消息来源
-      if (event.origin !== 'http://localhost:3000') {
+      if (event.origin !== 'http://localhost:8000') {
         return
       }
 
@@ -54,7 +54,7 @@ export default function ArtifactRender({ code }: ArtifactRenderProps) {
           type: 'ARTIFACT_CODE',
           code: code
         },
-        'http://localhost:3000'
+        'http://localhost:8000'
       )
     }
   }, [isIframeReady, code])
@@ -66,7 +66,7 @@ export default function ArtifactRender({ code }: ArtifactRenderProps) {
       </p>
       <iframe
         ref={iframeRef}
-        src="http://localhost:3000"
+        src="http://localhost:8000"
         className={cn('min-h-[70vh] w-full', !isIframeReady && 'hidden')}
         title="Artifact Preview"
       />

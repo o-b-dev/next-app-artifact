@@ -31,7 +31,7 @@ export default function Home() {
           {
             type: 'IFRAME_READY'
           },
-          'http://localhost:3001'
+          'http://localhost:8001'
         )
       }
     }
@@ -41,7 +41,7 @@ export default function Home() {
 
     const handleMessage = (event: MessageEvent) => {
       // 验证消息来源（可选，增加安全性）
-      if (event.origin !== 'http://localhost:3001') {
+      if (event.origin !== 'http://localhost:8001') {
         return
       }
 
