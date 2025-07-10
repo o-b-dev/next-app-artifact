@@ -63,8 +63,8 @@ importers:
         specifier: ^2.5.18
         version: 2.5.18(prettier@3.6.2)
       prettier-plugin-tailwindcss:
-        specifier: ^0.6.13
-        version: 0.6.13(prettier@3.6.2)
+        specifier: ^0.6.14
+        version: 0.6.14(prettier@3.6.2)
       turbo:
         specifier: ^2.5.4
         version: 2.5.4
@@ -115,11 +115,11 @@ importers:
   apps/web:
     dependencies:
       '@ai-sdk/google':
-        specifier: 2.0.0-beta.5
-        version: 2.0.0-beta.5(zod@3.25.76)
+        specifier: 2.0.0-beta.8
+        version: 2.0.0-beta.8(zod@3.25.76)
       '@ai-sdk/react':
-        specifier: 2.0.0-beta.4
-        version: 2.0.0-beta.4(react@19.1.0)(zod@3.25.76)
+        specifier: 2.0.0-beta.12
+        version: 2.0.0-beta.12(react@19.1.0)(zod@3.25.76)
       '@hookform/resolvers':
         specifier: ^5.1.1
         version: 5.1.1(react-hook-form@7.60.0(react@19.1.0))
@@ -130,8 +130,8 @@ importers:
         specifier: ^3.9.0
         version: 3.9.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       ai:
-        specifier: 5.0.0-beta.4
-        version: 5.0.0-beta.4(zod@3.25.76)
+        specifier: 5.0.0-beta.12
+        version: 5.0.0-beta.12(zod@3.25.76)
       lucide-react:
         specifier: 'catalog:'
         version: 0.514.0(react@19.1.0)
@@ -307,14 +307,14 @@ importers:
 
 packages:
 
-  '@ai-sdk/gateway@1.0.0-beta.3':
-    resolution: {integrity: sha512-g49gMSkXy94lYvl5LRh438OR/0JCG6ol0jV+iLot7cy5HLltZlGocEuauETBu4b10mDXOd7XIjTEZoQpYFMYLQ==}
+  '@ai-sdk/gateway@1.0.0-beta.4':
+    resolution: {integrity: sha512-P5/dS7pb+cBRWnTP0Aezq3/3PIrF+p64fUTxBAyZIert8qTyHm2gd6atbAJZprZ304Ui3QjA9MFybAa849//2w==}
     engines: {node: '>=18'}
     peerDependencies:
       zod: ^3.25.49
 
-  '@ai-sdk/google@2.0.0-beta.5':
-    resolution: {integrity: sha512-gwitAjYDG/Gr2S2YlQQB22Dr8wSiwnW/Ky1enBCwsuNAIkQtDAmkVDaT7UnHn1sHBrSpPZS/goiEQVVrlhIqHQ==}
+  '@ai-sdk/google@2.0.0-beta.8':
+    resolution: {integrity: sha512-LGqnVfK90mEpbBA0YpKrtNic+/g18zUpmAljhDl5ifLcHvOoD5O+82RGk4Ew9IrEhqWQi0cJu0VcyRs9iVLzgw==}
     engines: {node: '>=18'}
     peerDependencies:
       zod: ^3.25.49
@@ -329,8 +329,8 @@ packages:
     resolution: {integrity: sha512-Z8SPncMtS3RsoXITmT7NVwrAq6M44dmw0DoUOYJqNNtCu8iMWuxB8Nxsoqpa0uEEy9R1V1ZThJAXTYgjTUxl3w==}
     engines: {node: '>=18'}
 
-  '@ai-sdk/react@2.0.0-beta.4':
-    resolution: {integrity: sha512-6wIrUEqjakrou50EWY/GrJVxMvzZ8R6KTA/GQSt2TTdUvvp07hMhGiKC7fN6G59gDm2i8DHtrVdScsvxw/i4Sw==}
+  '@ai-sdk/react@2.0.0-beta.12':
+    resolution: {integrity: sha512-JwTryxxFZ8Fro/Uh7Z27ltCg3yhC1hxSBo+CHTJl9KIwnC+lxOpdR4aij6g6kLPAP3AuVNShEEdwC561nJYRiQ==}
     engines: {node: '>=18'}
     peerDependencies:
       react: ^18 || ^19 || ^19.0.0-rc
@@ -959,8 +959,8 @@ packages:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
-  ai@5.0.0-beta.4:
-    resolution: {integrity: sha512-AHEW+72mOrJaCN/7D/mbRKfwUpdMpzYKPLhkPZzyeQQXDDWaojo7x3bmtZZ5JhaKH/10oVTBP/KVL3Mqt4vsFQ==}
+  ai@5.0.0-beta.12:
+    resolution: {integrity: sha512-iLXQPcHcQGXv0HfDyhw9Ez+idsKrfXjGGSraGezyuRiNjV9b92XJSPLxgfR85HjkWMxnPxvZKlOtJUqpQbdy2g==}
     engines: {node: '>=18'}
     peerDependencies:
       zod: ^3.25.49
@@ -2173,11 +2173,13 @@ packages:
       prettier:
         optional: true
 
-  prettier-plugin-tailwindcss@0.6.13:
-    resolution: {integrity: sha512-uQ0asli1+ic8xrrSmIOaElDu0FacR4x69GynTh2oZjFY10JUt6EEumTQl5tB4fMeD6I1naKd+4rXQQ7esT2i1g==}
+  prettier-plugin-tailwindcss@0.6.14:
+    resolution: {integrity: sha512-pi2e/+ZygeIqntN+vC573BcW5Cve8zUB0SSAGxqpB4f96boZF4M3phPVoOFCeypwkpRYdi7+jQ5YJJUwrkGUAg==}
     engines: {node: '>=14.21.3'}
     peerDependencies:
       '@ianvs/prettier-plugin-sort-imports': '*'
+      '@prettier/plugin-hermes': '*'
+      '@prettier/plugin-oxc': '*'
       '@prettier/plugin-pug': '*'
       '@shopify/prettier-plugin-liquid': '*'
       '@trivago/prettier-plugin-sort-imports': '*'
@@ -2196,6 +2198,10 @@ packages:
       prettier-plugin-svelte: '*'
     peerDependenciesMeta:
       '@ianvs/prettier-plugin-sort-imports':
+        optional: true
+      '@prettier/plugin-hermes':
+        optional: true
+      '@prettier/plugin-oxc':
         optional: true
       '@prettier/plugin-pug':
         optional: true
@@ -2735,13 +2741,13 @@ packages:
 
 snapshots:
 
-  '@ai-sdk/gateway@1.0.0-beta.3(zod@3.25.76)':
+  '@ai-sdk/gateway@1.0.0-beta.4(zod@3.25.76)':
     dependencies:
       '@ai-sdk/provider': 2.0.0-beta.1
       '@ai-sdk/provider-utils': 3.0.0-beta.2(zod@3.25.76)
       zod: 3.25.76
 
-  '@ai-sdk/google@2.0.0-beta.5(zod@3.25.76)':
+  '@ai-sdk/google@2.0.0-beta.8(zod@3.25.76)':
     dependencies:
       '@ai-sdk/provider': 2.0.0-beta.1
       '@ai-sdk/provider-utils': 3.0.0-beta.2(zod@3.25.76)
@@ -2759,10 +2765,10 @@ snapshots:
     dependencies:
       json-schema: 0.4.0
 
-  '@ai-sdk/react@2.0.0-beta.4(react@19.1.0)(zod@3.25.76)':
+  '@ai-sdk/react@2.0.0-beta.12(react@19.1.0)(zod@3.25.76)':
     dependencies:
       '@ai-sdk/provider-utils': 3.0.0-beta.2(zod@3.25.76)
-      ai: 5.0.0-beta.4(zod@3.25.76)
+      ai: 5.0.0-beta.12(zod@3.25.76)
       react: 19.1.0
       swr: 2.3.3(react@19.1.0)
       throttleit: 2.1.0
@@ -3317,9 +3323,9 @@ snapshots:
       screenfull: 5.2.0
       tslib: 2.8.1
 
-  ai@5.0.0-beta.4(zod@3.25.76):
+  ai@5.0.0-beta.12(zod@3.25.76):
     dependencies:
-      '@ai-sdk/gateway': 1.0.0-beta.3(zod@3.25.76)
+      '@ai-sdk/gateway': 1.0.0-beta.4(zod@3.25.76)
       '@ai-sdk/provider': 2.0.0-beta.1
       '@ai-sdk/provider-utils': 3.0.0-beta.2(zod@3.25.76)
       '@opentelemetry/api': 1.9.0
@@ -4856,7 +4862,7 @@ snapshots:
     optionalDependencies:
       prettier: 3.6.2
 
-  prettier-plugin-tailwindcss@0.6.13(prettier@3.6.2):
+  prettier-plugin-tailwindcss@0.6.14(prettier@3.6.2):
     dependencies:
       prettier: 3.6.2
 

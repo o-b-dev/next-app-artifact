@@ -12,12 +12,12 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@ai-sdk/google": "2.0.0-beta.5",
-    "@ai-sdk/react": "2.0.0-beta.4",
+    "@ai-sdk/google": "2.0.0-beta.8",
+    "@ai-sdk/react": "2.0.0-beta.12",
     "@hookform/resolvers": "^5.1.1",
     "@workspace/ui": "workspace:*",
     "ahooks": "^3.9.0",
-    "ai": "5.0.0-beta.4",
+    "ai": "5.0.0-beta.12",
     "lucide-react": "catalog:",
     "marked": "^16.0.0",
     "next": "catalog:",

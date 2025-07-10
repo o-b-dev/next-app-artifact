@@ -4,14 +4,16 @@ import { useChat } from '@ai-sdk/react'
 import { Button } from '@workspace/ui/components/button'
 import { Input } from '@workspace/ui/components/input'
 import { cn } from '@workspace/ui/lib/utils'
+import { DefaultChatTransport } from 'ai'
 import { useEffect, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 
 import Markdown from '@/features/markdown/components'
 
-export interface IArtifactChatProps {
+export interface IAIChatBoxProps {
   autoScroll?: boolean
   messageBoxClassName?: string
+  chatApi?: string
 }
 
 // 定义表单数据类型
@@ -19,8 +21,12 @@ interface MessageFormData {
   message: string
 }
 
-export default function ArtifactChat({ autoScroll = false, messageBoxClassName }: IArtifactChatProps) {
-  const { messages, sendMessage, stop } = useChat()
+export default function AIChatBox({ autoScroll = false, messageBoxClassName, chatApi }: IAIChatBoxProps) {
+  const { messages, sendMessage, stop } = useChat({
+    transport: new DefaultChatTransport({
+      api: chatApi
+    })
+  })
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   // 初始化表单
