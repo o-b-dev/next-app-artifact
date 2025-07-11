@@ -22,7 +22,7 @@ catalogs:
       specifier: ^9.30.1
       version: 9.30.1
     lucide-react:
-      specifier: ^0.514.0
+      specifier: 0.514.0
       version: 0.514.0
     next:
       specifier: ^15.3.5
