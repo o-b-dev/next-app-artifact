@@ -79,9 +79,9 @@ function RegenerateButton({
   if (!shouldShow) return null
 
   return (
-    <div className="pl-4 pt-2">
-      <Button size="sm" variant="outline" onClick={onRegenerate} className="flex items-center gap-1">
-        <RotateCcw className="h-3 w-3" />
+    <div className="pl-4">
+      <Button size="sm" variant="secondary" onClick={onRegenerate} className="flex items-center gap-1 py-1 text-xs">
+        <RotateCcw className="size-3" />
         重新生成
       </Button>
     </div>
@@ -99,10 +99,19 @@ export function MessageRenderer({
 }: MessageRendererProps) {
   return (
     <div className="space-y-2">
-      <div className="flex items-center gap-2">
+      <div className="flex items-center justify-between gap-2">
         <Badge variant={message.role === 'user' ? 'default' : 'secondary'}>
           {message.role === 'user' ? '用户' : 'AI'}
         </Badge>
+
+        <RegenerateButton
+          message={message}
+          messageIndex={messageIndex}
+          totalMessages={totalMessages}
+          status={status}
+          error={error}
+          onRegenerate={onRegenerate}
+        />
       </div>
 
       <div className="space-y-2 pl-4">
@@ -110,15 +119,6 @@ export function MessageRenderer({
           <MessagePartRenderer key={index} part={part} index={index} onAddToolResult={onAddToolResult} />
         ))}
       </div>
-
-      <RegenerateButton
-        message={message}
-        messageIndex={messageIndex}
-        totalMessages={totalMessages}
-        status={status}
-        error={error}
-        onRegenerate={onRegenerate}
-      />
     </div>
   )
 }

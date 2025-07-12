@@ -2,7 +2,7 @@ import { Badge } from '@workspace/ui/components/badge'
 import { Button } from '@workspace/ui/components/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@workspace/ui/components/card'
 import { ScrollArea } from '@workspace/ui/components/scroll-area'
-import type { UIMessage } from 'ai'
+import type { ChatStatus, UIMessage } from 'ai'
 import { AlertCircle, MessageSquare, Plus } from 'lucide-react'
 import { useEffect, useRef } from 'react'
 
@@ -11,7 +11,7 @@ import type { ToolResultParams } from './types'
 
 interface ChatMessagesProps {
   messages: UIMessage[]
-  status: string
+  status: ChatStatus
   error: string | null
   onRegenerate: () => void
   onAddToolResult: (params: ToolResultParams) => void
@@ -37,18 +37,14 @@ export function ChatMessages({ messages, status, error, onRegenerate, onAddToolR
             <CardTitle className="text-base">AI 助手</CardTitle>
             {status === 'streaming' && (
               <Badge variant="secondary" className="text-xs">
-                正在思考...
+                正在输出...
               </Badge>
             )}
           </div>
 
           {/* New Chat 按钮 */}
           {messages.length > 0 && (
-            <Button
-              onClick={onNewChat}
-              className="border-input bg-background ring-offset-background hover:bg-accent hover:text-accent-foreground focus-visible:ring-ring flex items-center gap-1 rounded-md border px-3 py-1 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
-              disabled={status === 'streaming'}
-            >
+            <Button onClick={onNewChat} disabled={status === 'streaming'}>
               <Plus className="h-3 w-3" />
               新建聊天
             </Button>

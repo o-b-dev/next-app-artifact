@@ -25,7 +25,7 @@ export default function AIAgentChatBox() {
   }
 
   return (
-    <div className="mx-auto flex h-full max-w-4xl flex-col">
+    <div className="mx-auto flex h-full max-w-4xl flex-col pb-12">
       {/* 预设操作区域 */}
       {messages.length === 0 && (
         <PresetActions onActionClick={handlePresetAction} isDisabled={status === 'streaming'} />
