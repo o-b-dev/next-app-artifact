@@ -26,6 +26,8 @@ export const config = defineConfig([
     rules: {
       '@typescript-eslint/no-unused-expressions': 'off',
       '@typescript-eslint/consistent-type-imports': 'error',
+      '@typescript-eslint/no-floating-promises': 'off',
+      '@typescript-eslint/no-misused-promises': 'off',
       '@typescript-eslint/naming-convention': [
         'error',
         {

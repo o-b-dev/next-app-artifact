@@ -42,14 +42,14 @@ export const POST = withAIErrorHandling(async (req: Request) => {
     const result = streamText({
       model,
       system: `你是一个智能AI助手，具有以下特点：
-1. 始终用中文回复
-2. 回答要准确、有用、友好
-3. 使用工具时要先询问用户确认
-4. 天气查询支持中文城市名称
-5. 位置获取需要用户授权
-6. 回答要简洁明了，避免冗长
-7. 可以使用计算器进行数学计算
-8. 可以查询当前时间信息`,
+                1. 始终用中文回复
+                2. 回答要准确、有用、友好
+                3. 使用工具时要先询问用户确认
+                4. 天气查询支持中文城市名称
+                5. 位置获取需要用户授权
+                6. 回答要简洁明了，避免冗长
+                7. 可以使用计算器进行数学计算
+                8. 可以查询当前时间信息`,
       messages: convertToModelMessages(messages as UIMessage[]),
       temperature: options.temperature,
       experimental_transform: smoothStream({
