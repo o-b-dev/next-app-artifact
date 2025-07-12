@@ -17,6 +17,9 @@ export default function HomePage() {
       </div>
 
       <div className="fixed bottom-12 right-1/2 flex translate-x-1/2 gap-2">
+        <Link href="/chat">
+          <Button variant="link">Chat</Button>
+        </Link>
         <Link href="/agent">
           <Button variant="link">Agent</Button>
         </Link>

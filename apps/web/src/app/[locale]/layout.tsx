@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from 'next/font/google'
 import { notFound } from 'next/navigation'
 
 import { AppProviders } from '@/features/common/components/providers'
+import SwitchTheme from '@/features/common/components/theme'
 import { hasLocale } from '@/features/i18n/lib'
 import { routing } from '@/features/i18n/utils/routing'
 
@@ -37,7 +38,10 @@ export default async function LocaleLayout({
       suppressHydrationWarning
     >
       <body suppressHydrationWarning>
-        <AppProviders>{children}</AppProviders>
+        <AppProviders>
+          <SwitchTheme />
+          {children}
+        </AppProviders>
       </body>
     </html>
   )

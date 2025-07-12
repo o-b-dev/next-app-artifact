@@ -41,5 +41,10 @@ export const importConfig = defineConfig([
         }
       ]
     }
+  },
+  {
+    rules: {
+      'import/no-named-as-default': 'off'
+    }
   }
 ])

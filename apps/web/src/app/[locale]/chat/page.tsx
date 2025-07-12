@@ -1,0 +1,12 @@
+'use client'
+
+import AIChatBox from '@/features/ai/components/AIChatBox'
+
+export default function ArtifactPage() {
+  return (
+    <>
+      <h3 className="text-2xl font-bold">Artifact</h3>
+      <AIChatBox autoScroll messageBoxClassName="border-none bg-transparent" />
+    </>
+  )
+}

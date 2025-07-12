@@ -1,18 +1,17 @@
 import type { UIMessage } from 'ai'
-import { convertToModelMessages, smoothStream, stepCountIs, streamText } from 'ai'
+import { convertToModelMessages, smoothStream, streamText } from 'ai'
 import z from 'zod'
 
 import { withAIErrorHandling } from '../../middleware'
-import { getDeepSeekModel } from '../../utils/model'
-import { tools } from '../../utils/tools'
+import { getGoogleModel } from '../../utils'
 
 // 输入验证模式
 const requestSchema = z.object({
   messages: z.array(z.unknown()).min(1, '至少需要一条消息'),
   options: z
     .object({
-      maxSteps: z.number().min(1).max(10).optional().default(5),
-      temperature: z.number().min(0).max(2).optional().default(0.7)
+      temperature: z.number().min(0).max(2).optional().default(0.7),
+      maxTokens: z.number().min(1).max(4000).optional().default(2000)
     })
     .optional()
     .default({})
@@ -36,20 +35,16 @@ export const POST = withAIErrorHandling(async (req: Request) => {
     }
 
     // 获取模型配置
-    const model = getDeepSeekModel()
+    const model = getGoogleModel()
 
-    // 创建流式响应
     const result = streamText({
       model,
       system: `你是一个智能AI助手，具有以下特点：
 1. 始终用中文回复
 2. 回答要准确、有用、友好
-3. 使用工具时要先询问用户确认
-4. 天气查询支持中文城市名称
-5. 位置获取需要用户授权
-6. 回答要简洁明了，避免冗长
-7. 可以使用计算器进行数学计算
-8. 可以查询当前时间信息`,
+3. 不使用markdown格式，用纯文本回复
+4. 回答要简洁明了，避免冗长
+5. 如果用户询问代码相关问题，请提供清晰的解释和示例`,
       messages: convertToModelMessages(messages as UIMessage[]),
       temperature: options.temperature,
       experimental_transform: smoothStream({
@@ -83,15 +78,12 @@ export const POST = withAIErrorHandling(async (req: Request) => {
 
           return buffer.slice(0, chunkSize)
         }
-      }),
-      tools,
-      stopWhen: stepCountIs(options.maxSteps)
+      })
     })
 
-    // 返回流式响应
     return result.toUIMessageStreamResponse()
   } catch (error) {
-    console.error('Agent API 错误:', error)
+    console.error('Chat API 错误:', error)
 
     // 处理验证错误
     if (error instanceof z.ZodError) {

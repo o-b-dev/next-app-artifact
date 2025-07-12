@@ -24,6 +24,8 @@ import {
 } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 
+import Markdown from '@/features/markdown/components'
+
 // 预设操作配置
 const presetActions = [
   {
@@ -188,7 +190,7 @@ export default function AIAgentChatBox() {
       case 'text':
         return (
           <div key={index} className="text-sm leading-relaxed">
-            {part.text}
+            <Markdown content={part.text} />
           </div>
         )
 
@@ -451,103 +453,101 @@ export default function AIAgentChatBox() {
       )}
 
       {/* 聊天消息区域 */}
-      <Card className="mb-4 flex-1">
-        <CardHeader className="pb-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="h-2 w-2 rounded-full bg-green-500" />
-              <CardTitle className="text-base">AI 助手</CardTitle>
-              {status === 'streaming' && (
-                <Badge variant="secondary" className="text-xs">
-                  正在思考...
-                </Badge>
+      {messages.length !== 0 && (
+        <Card className="mb-4 flex-1">
+          <CardHeader className="pb-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="h-2 w-2 rounded-full bg-green-500" />
+                <CardTitle className="text-base">AI 助手</CardTitle>
+                {status === 'streaming' && (
+                  <Badge variant="secondary" className="text-xs">
+                    正在思考...
+                  </Badge>
+                )}
+              </div>
+
+              {/* New Chat 按钮 */}
+              {messages.length > 0 && (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={handleNewChat}
+                  className="flex items-center gap-1"
+                  disabled={status === 'streaming'}
+                >
+                  <Plus className="h-3 w-3" />
+                  新建聊天
+                </Button>
               )}
             </div>
-
-            {/* New Chat 按钮 */}
-            {messages.length > 0 && (
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={handleNewChat}
-                className="flex items-center gap-1"
-                disabled={status === 'streaming'}
-              >
-                <Plus className="h-3 w-3" />
-                新建聊天
-              </Button>
-            )}
-          </div>
-        </CardHeader>
-        <CardContent className="pt-0">
-          <ScrollArea className="h-[calc(100vh-300px)] pr-4" ref={scrollAreaRef}>
-            <div className="space-y-4">
-              {messages.length === 0 ? (
-                <div className="text-muted-foreground py-8 text-center">
-                  <MessageSquare className="mx-auto mb-4 h-12 w-12 opacity-50" />
-                  <p>开始与AI助手对话，或选择上方的预设操作</p>
-                </div>
-              ) : (
-                messages.map((message, messageIndex) => (
-                  <div key={message.id} className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <Badge variant={message.role === 'user' ? 'default' : 'secondary'}>
-                        {message.role === 'user' ? '用户' : 'AI'}
-                      </Badge>
-                    </div>
-                    <div className="space-y-2 pl-4">
-                      {message.parts.map((part, index) => renderMessagePart(part, index))}
-                    </div>
-
-                    {/* 在AI消息下方显示重新生成按钮 */}
-                    {message.role === 'assistant' &&
-                      messageIndex === messages.length - 1 &&
-                      status !== 'streaming' &&
-                      !error && (
-                        <div className="pl-4 pt-2">
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={handleRegenerate}
-                            className="flex items-center gap-1"
-                          >
-                            <RotateCcw className="h-3 w-3" />
-                            重新生成
-                          </Button>
-                        </div>
-                      )}
+          </CardHeader>
+          <CardContent className="pt-0">
+            <ScrollArea className="h-[calc(100vh-300px)] pr-4" ref={scrollAreaRef}>
+              <div className="space-y-4">
+                {messages.length === 0 ? (
+                  <div className="text-muted-foreground py-8 text-center">
+                    <MessageSquare className="mx-auto mb-4 h-12 w-12 opacity-50" />
+                    <p>开始与AI助手对话，或选择上方的预设操作</p>
                   </div>
-                ))
-              )}
+                ) : (
+                  messages.map((message, messageIndex) => (
+                    <div key={message.id} className="space-y-2">
+                      <div className="flex items-center gap-2">
+                        <Badge variant={message.role === 'user' ? 'default' : 'secondary'}>
+                          {message.role === 'user' ? '用户' : 'AI'}
+                        </Badge>
+                      </div>
+                      <div className="space-y-2 pl-4">
+                        {message.parts.map((part, index) => renderMessagePart(part, index))}
+                      </div>
 
-              {/* 错误提示 */}
-              {error && (
-                <div className="flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 p-3 dark:border-red-800 dark:bg-red-950/20">
-                  <AlertCircle className="h-4 w-4 text-red-500" />
-                  <span className="text-sm text-red-600 dark:text-red-400">{error}</span>
-                </div>
-              )}
-            </div>
-          </ScrollArea>
-        </CardContent>
-      </Card>
+                      {/* 在AI消息下方显示重新生成按钮 */}
+                      {message.role === 'assistant' &&
+                        messageIndex === messages.length - 1 &&
+                        status !== 'streaming' &&
+                        !error && (
+                          <div className="pl-4 pt-2">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={handleRegenerate}
+                              className="flex items-center gap-1"
+                            >
+                              <RotateCcw className="h-3 w-3" />
+                              重新生成
+                            </Button>
+                          </div>
+                        )}
+                    </div>
+                  ))
+                )}
 
-      {/* 固定输入区域 */}
-      <div className="bg-background border-border sticky bottom-0 border-t pb-6 pt-4">
-        <Card>
-          <CardContent className="pt-4">
-            <form onSubmit={handleSendMessage} className="flex gap-2">
-              <Input
-                placeholder="输入您的问题..."
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                disabled={status === 'streaming'}
-                className="flex-1"
-              />
-              {renderInputButton()}
-            </form>
+                {/* 错误提示 */}
+                {error && (
+                  <div className="flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 p-3 dark:border-red-800 dark:bg-red-950/20">
+                    <AlertCircle className="h-4 w-4 text-red-500" />
+                    <span className="text-sm text-red-600 dark:text-red-400">{error}</span>
+                  </div>
+                )}
+              </div>
+            </ScrollArea>
           </CardContent>
         </Card>
+      )}
+
+      {/* 固定输入区域 */}
+      <div className="bg-background border-border fixed bottom-0 left-0 w-full border-t p-4 pt-4">
+        <form onSubmit={handleSendMessage} className="flex gap-2">
+          <Input
+            placeholder="输入您的问题..."
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            disabled={status === 'streaming'}
+            className="flex-1"
+          />
+          {renderInputButton()}
+        </form>
       </div>
     </div>
   )

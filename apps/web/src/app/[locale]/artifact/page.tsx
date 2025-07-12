@@ -10,7 +10,7 @@ export default function ArtifactPage() {
     <>
       <h3 className="text-2xl font-bold">Artifact</h3>
       <ArtifactRender code={demoTxt.code} />
-      <AIChatBox autoScroll messageBoxClassName="border-none bg-transparent" />
+      <AIChatBox autoScroll messageBoxClassName="border-none bg-transparent" chatApi="/api/artifacts" />
     </>
   )
 }
