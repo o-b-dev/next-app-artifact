@@ -1,6 +1,8 @@
 import { Badge } from '@workspace/ui/components/badge'
 import { Button } from '@workspace/ui/components/button'
+import { Separator } from '@workspace/ui/components/separator'
 import { RotateCcw } from 'lucide-react'
+import { memo } from 'react'
 import { match, P } from 'ts-pattern'
 
 import Markdown from '@/features/markdown/components'
@@ -12,7 +14,7 @@ import GetLocationTool from './GetLocationTool'
 import GetWeatherTool from './GetWeatherTool'
 import type { MessagePartRendererProps, MessageRendererProps, RegenerateButtonProps, ToolRendererProps } from './types'
 
-function ToolRenderer({ part, onAddToolResult }: ToolRendererProps) {
+const ToolRenderer = memo(({ part, onAddToolResult }: ToolRendererProps) => {
   // 类型守卫：确保这是一个工具类型的消息部分
   if (!('toolCallId' in part) || !('state' in part)) {
     return null
@@ -34,14 +36,15 @@ function ToolRenderer({ part, onAddToolResult }: ToolRendererProps) {
     .with({ type: 'tool-calculator' }, () => <CalculatorTool {...toolProps} />)
     .with({ type: 'tool-getCurrentTime' }, () => <GetCurrentTimeTool {...toolProps} />)
     .otherwise(() => null)
-}
+})
 
-function MessagePartRenderer({ part, index, onAddToolResult }: MessagePartRendererProps) {
-  return match(part)
-    .with({ type: 'step-start' }, () =>
-      index > 0 ? <div key={index} className="my-4 border-t border-gray-200 dark:border-gray-700" /> : null
-    )
-    .with({ type: 'text' }, () => {
+ToolRenderer.displayName = 'ToolRenderer'
+
+const MessagePartRenderer = memo(({ part, index, onAddToolResult }: MessagePartRendererProps) => {
+  const type = part.type
+  return match(type)
+    .with('step-start', () => index > 0 && <Separator key={index} className="my-4" />)
+    .with('text', () => {
       // 类型守卫：确保这是一个文本类型的消息部分
       if (!('text' in part)) {
         return null
@@ -54,16 +57,18 @@ function MessagePartRenderer({ part, index, onAddToolResult }: MessagePartRender
     })
     .with(
       P.union(
-        { type: 'tool-askForConfirmation' },
-        { type: 'tool-getLocation' },
-        { type: 'tool-getWeatherInformation' },
-        { type: 'tool-calculator' },
-        { type: 'tool-getCurrentTime' }
+        'tool-askForConfirmation',
+        'tool-getLocation',
+        'tool-getWeatherInformation',
+        'tool-calculator',
+        'tool-getCurrentTime'
       ),
       () => <ToolRenderer key={index} part={part} onAddToolResult={onAddToolResult} />
     )
     .otherwise(() => null)
-}
+})
+
+MessagePartRenderer.displayName = 'MessagePartRenderer'
 
 function RegenerateButton({
   message,
@@ -88,37 +93,33 @@ function RegenerateButton({
   )
 }
 
-export function MessageRenderer({
-  message,
-  messageIndex,
-  totalMessages,
-  status,
-  error,
-  onRegenerate,
-  onAddToolResult
-}: MessageRendererProps) {
-  return (
-    <div className="space-y-2">
-      <div className="flex items-center justify-between gap-2">
-        <Badge variant={message.role === 'user' ? 'default' : 'secondary'}>
-          {message.role === 'user' ? '用户' : 'AI'}
-        </Badge>
+export const MessageRenderer = memo(
+  ({ message, messageIndex, totalMessages, status, error, onRegenerate, onAddToolResult }: MessageRendererProps) => {
+    return (
+      <div className="space-y-2">
+        <div className="flex items-center justify-between gap-2">
+          <Badge variant={message.role === 'user' ? 'default' : 'secondary'}>
+            {message.role === 'user' ? '用户' : 'AI'}
+          </Badge>
 
-        <RegenerateButton
-          message={message}
-          messageIndex={messageIndex}
-          totalMessages={totalMessages}
-          status={status}
-          error={error}
-          onRegenerate={onRegenerate}
-        />
-      </div>
+          <RegenerateButton
+            message={message}
+            messageIndex={messageIndex}
+            totalMessages={totalMessages}
+            status={status}
+            error={error}
+            onRegenerate={onRegenerate}
+          />
+        </div>
 
-      <div className="space-y-2 pl-4">
-        {message.parts.map((part, index) => (
-          <MessagePartRenderer key={index} part={part} index={index} onAddToolResult={onAddToolResult} />
-        ))}
+        <div className="space-y-2 pl-4">
+          {message.parts.map((part, index) => (
+            <MessagePartRenderer key={index} part={part} index={index} onAddToolResult={onAddToolResult} />
+          ))}
+        </div>
       </div>
-    </div>
-  )
-}
+    )
+  }
+)
+
+MessageRenderer.displayName = 'MessageRenderer'

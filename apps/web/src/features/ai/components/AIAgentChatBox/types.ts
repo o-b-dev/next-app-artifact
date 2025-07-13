@@ -11,7 +11,7 @@ export interface PresetAction {
 }
 
 // 消息部分的类型
-export type MessagePart = UIMessage['parts'][0]
+export type MessagePart = UIMessage['parts'][number]
 
 // 工具结果参数类型
 export interface ToolResultParams {

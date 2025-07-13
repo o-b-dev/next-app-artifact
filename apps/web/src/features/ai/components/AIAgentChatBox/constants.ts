@@ -1,9 +1,17 @@
-import { Calculator, Clock, Cloud, MapPin, MessageSquare, Sparkles } from 'lucide-react'
+import { Calculator, Clock, Cloud, MapPin, MessageSquare, Search, Sparkles } from 'lucide-react'
 
 import type { PresetAction } from './types'
 
 // 预设操作配置
 export const PRESET_ACTIONS: PresetAction[] = [
+  {
+    id: 'search',
+    title: '网络搜索',
+    description: '搜索最新的网络信息',
+    icon: Search,
+    prompt: '请帮我搜索最新的AI技术发展趋势',
+    color: 'bg-red-500 hover:bg-red-600'
+  },
   {
     id: 'weather',
     title: '查询天气',

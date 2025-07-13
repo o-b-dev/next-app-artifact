@@ -1,10 +1,11 @@
 import { Button } from '@workspace/ui/components/button'
 import { Input } from '@workspace/ui/components/input'
+import type { ChatStatus } from 'ai'
 import { AlertCircle, Loader2, Send, Square } from 'lucide-react'
 import { useState } from 'react'
 
 interface ChatInputProps {
-  status: string
+  status: ChatStatus
   error: string | null
   isRetrying: boolean
   onSendMessage: (text: string) => Promise<void> | void
@@ -24,7 +25,7 @@ export function ChatInput({ status, error, isRetrying, onSendMessage, onStop, on
   }
 
   const renderInputButton = () => {
-    if (status === 'streaming') {
+    if (status === 'streaming' || status === 'submitted') {
       return (
         <Button type="button" onClick={onStop} className="flex items-center gap-1">
           <Square className="h-4 w-4" />

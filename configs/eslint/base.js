@@ -38,7 +38,8 @@ export const config = defineConfig([
             match: true
           }
         }
-      ]
+      ],
+      '@typescript-eslint/no-unsafe-assignment': 'off'
     }
   },
   {
