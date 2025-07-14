@@ -55,7 +55,15 @@ export const POST = withAIErrorHandling(async (req: Request) => {
                    - 格式：![图片描述](图片URL)
                    - 示例：![生成的图片](http://localhost:8001/generated-images/generated-1234567890-abc123.png)
                    - 不要只返回URL，必须用完整的Markdown图片语法
-                   - 图片描述应该简洁描述图片内容`,
+                   - 图片描述应该简洁描述图片内容
+                10. 搜索功能规则：
+                    - 当使用搜索工具时，必须保留并显示所有原文链接
+                    - 搜索结果要包含完整的标题、摘要和链接
+                    - 所有链接必须使用 Markdown 格式：[标题](链接)
+                    - 引用信息时要注明来源链接
+                    - 如果搜索结果包含即时答案，优先展示
+                    - 确保所有链接都是可点击的完整URL
+                    - 不要只显示纯文本链接，必须使用 Markdown 链接格式`,
       messages: convertToModelMessages(messages as UIMessage[]),
       temperature: options.temperature,
       experimental_transform: smoothStream({

@@ -2,7 +2,7 @@ import { askForConfirmation } from './confirmation'
 import { generateImage } from './image'
 import { getLocation } from './location'
 import { calculator } from './math'
-import { webSearch } from './search'
+import { google_search } from './search'
 import { getCurrentTime } from './time'
 import { getWeatherInformation } from './weather'
 
@@ -13,6 +13,6 @@ export const tools = {
   getLocation,
   getCurrentTime,
   calculator,
-  webSearch,
+  webSearch: google_search,
   generateImage
 }

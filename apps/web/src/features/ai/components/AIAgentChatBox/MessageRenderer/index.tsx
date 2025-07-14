@@ -14,6 +14,7 @@ import GetCurrentTimeTool from './GetCurrentTimeTool'
 import GetLocationTool from './GetLocationTool'
 import GetWeatherTool from './GetWeatherTool'
 import type { MessagePartRendererProps, MessageRendererProps, RegenerateButtonProps, ToolRendererProps } from './types'
+import WebSerchTool from './WebSerchTool'
 
 const ToolRenderer = memo(({ part, onAddToolResult }: ToolRendererProps) => {
   // 类型守卫：确保这是一个工具类型的消息部分
@@ -37,6 +38,7 @@ const ToolRenderer = memo(({ part, onAddToolResult }: ToolRendererProps) => {
     .with({ type: 'tool-calculator' }, () => <CalculatorTool {...toolProps} />)
     .with({ type: 'tool-getCurrentTime' }, () => <GetCurrentTimeTool {...toolProps} />)
     .with({ type: 'tool-generateImage' }, () => <GenerateImageTool {...toolProps} />)
+    .with({ type: 'tool-webSearch' }, () => <WebSerchTool {...toolProps} />)
     .otherwise(() => null)
 })
 
@@ -64,7 +66,8 @@ const MessagePartRenderer = memo(({ part, index, onAddToolResult }: MessagePartR
         'tool-getWeatherInformation',
         'tool-calculator',
         'tool-getCurrentTime',
-        'tool-generateImage'
+        'tool-generateImage',
+        'tool-webSearch'
       ),
       () => <ToolRenderer key={index} part={part} onAddToolResult={onAddToolResult} />
     )

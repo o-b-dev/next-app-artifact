@@ -17,7 +17,7 @@ export const generateImage = tool({
     fileName: z.string().optional().describe('保存的文件名'),
     filePath: z.string().optional().describe('文件的本地路径')
   }),
-  execute: async ({ prompt }: { prompt: string }) => {
+  execute: async ({ prompt }) => {
     const result = await generateText({
       model: getGoogleModel('gemini-2.0-flash-preview-image-generation'),
       providerOptions: {

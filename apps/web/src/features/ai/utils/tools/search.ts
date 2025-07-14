@@ -1,5 +1,8 @@
-import { tool } from 'ai'
+import { google } from '@ai-sdk/google'
+import { generateText, tool } from 'ai'
 import z from 'zod'
+
+import { getGoogleModel } from '../model'
 
 // 使用 SearchAPI.io 的 DuckDuckGo 搜索工具
 export const webSearch = tool({
@@ -76,6 +79,47 @@ export const webSearch = tool({
       return results
     } catch (error) {
       throw new Error(`搜索失败: ${error instanceof Error ? error.message : '未知错误'}`)
+    }
+  }
+})
+
+// 谷歌原生搜索
+export const google_search = tool({
+  description: '使用谷歌搜索网络信息，获取最新的网页搜索结果',
+  inputSchema: z.object({
+    query: z.string().describe('搜索查询词，如：最新AI技术发展、React 18新特性等')
+  }),
+  outputSchema: z.object({
+    text: z.string().describe('搜索结果'),
+    sources: z
+      .array(
+        z.object({
+          type: z.literal('source').describe('类型'),
+          sourceType: z.enum(['url', 'document']).describe('来源类型'),
+          id: z.string().describe('来源ID'),
+          url: z.string().describe('来源的URL')
+        })
+      )
+      .describe('搜索结果')
+  }),
+  execute: async ({ query }) => {
+    const { text, sources } = await generateText({
+      model: getGoogleModel(),
+      tools: {
+        google_search: google.tools.googleSearch({})
+      },
+      system: '输出的必须精简',
+      prompt: `请使用谷歌搜索网络信息，获取最新的网页搜索结果，搜索查询词：${query}`
+    })
+
+    return {
+      text,
+      sources: sources.map(({ type, sourceType, id, ...source }) => ({
+        type,
+        sourceType,
+        id,
+        url: (source as { url: string }).url
+      }))
     }
   }
 })
