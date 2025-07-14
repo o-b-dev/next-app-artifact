@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import type { ComponentType, HTMLAttributes } from 'react'
 
 import MarkdownCode from '../components/kit/code'
@@ -77,5 +78,14 @@ export const components: {
     <tr className="even:bg-muted m-0 border-t p-0" {...props}>
       {children}
     </tr>
+  ),
+  img: (props: HTMLAttributes<HTMLImageElement> & { src?: string; alt?: string }) => (
+    <Image
+      className="h-[300px] w-[500px] rounded-lg border object-contain"
+      src={props.src || ''}
+      alt={props.alt || '图片'}
+      width={500}
+      height={300}
+    />
   )
 }

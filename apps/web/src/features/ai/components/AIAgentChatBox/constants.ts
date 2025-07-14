@@ -1,4 +1,4 @@
-import { Calculator, Clock, Cloud, MapPin, MessageSquare, Search, Sparkles } from 'lucide-react'
+import { Calculator, Clock, Cloud, ImageIcon, MapPin, MessageSquare, Search, Sparkles } from 'lucide-react'
 
 import type { PresetAction } from './types'
 
@@ -59,5 +59,13 @@ export const PRESET_ACTIONS: PresetAction[] = [
     icon: Clock,
     prompt: '请告诉我现在的时间',
     color: 'bg-teal-500 hover:bg-teal-600'
+  },
+  {
+    id: 'image',
+    title: '图片生成',
+    description: '根据提示词生成图片',
+    icon: ImageIcon,
+    prompt: '请帮我生成一张小狗图片',
+    color: 'bg-pink-500 hover:bg-pink-600'
   }
 ]

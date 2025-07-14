@@ -9,6 +9,7 @@ import Markdown from '@/features/markdown/components'
 
 import AskForConfirmationTool from './AskForConfirmationTool'
 import CalculatorTool from './CalculatorTool'
+import GenerateImageTool from './GenerateImageTool'
 import GetCurrentTimeTool from './GetCurrentTimeTool'
 import GetLocationTool from './GetLocationTool'
 import GetWeatherTool from './GetWeatherTool'
@@ -35,6 +36,7 @@ const ToolRenderer = memo(({ part, onAddToolResult }: ToolRendererProps) => {
     .with({ type: 'tool-getWeatherInformation' }, () => <GetWeatherTool {...toolProps} />)
     .with({ type: 'tool-calculator' }, () => <CalculatorTool {...toolProps} />)
     .with({ type: 'tool-getCurrentTime' }, () => <GetCurrentTimeTool {...toolProps} />)
+    .with({ type: 'tool-generateImage' }, () => <GenerateImageTool {...toolProps} />)
     .otherwise(() => null)
 })
 
@@ -61,7 +63,8 @@ const MessagePartRenderer = memo(({ part, index, onAddToolResult }: MessagePartR
         'tool-getLocation',
         'tool-getWeatherInformation',
         'tool-calculator',
-        'tool-getCurrentTime'
+        'tool-getCurrentTime',
+        'tool-generateImage'
       ),
       () => <ToolRenderer key={index} part={part} onAddToolResult={onAddToolResult} />
     )

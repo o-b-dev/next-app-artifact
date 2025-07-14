@@ -1,4 +1,5 @@
 import { askForConfirmation } from './confirmation'
+import { generateImage } from './image'
 import { getLocation } from './location'
 import { calculator } from './math'
 import { webSearch } from './search'
@@ -12,5 +13,6 @@ export const tools = {
   getLocation,
   getCurrentTime,
   calculator,
-  webSearch
+  webSearch,
+  generateImage
 }

@@ -3,7 +3,7 @@ import { convertToModelMessages, smoothStream, stepCountIs, streamText } from 'a
 import z from 'zod'
 
 import { withAIErrorHandling } from '../../middleware'
-import { getDeepSeekModel } from '../../utils/model'
+import { getGoogleModel } from '../../utils/model'
 import { tools } from '../../utils/tools'
 
 // 输入验证模式
@@ -36,7 +36,7 @@ export const POST = withAIErrorHandling(async (req: Request) => {
     }
 
     // 获取模型配置
-    const model = getDeepSeekModel()
+    const model = getGoogleModel()
 
     // 创建流式响应
     const result = streamText({
@@ -49,7 +49,13 @@ export const POST = withAIErrorHandling(async (req: Request) => {
                 5. 位置获取需要用户授权
                 6. 回答要简洁明了，避免冗长
                 7. 可以使用计算器进行数学计算
-                8. 可以查询当前时间信息`,
+                8. 可以查询当前时间信息
+                9. 图片生成规则：
+                   - 当使用图片生成工具时，必须使用 Markdown 格式显示图片
+                   - 格式：![图片描述](图片URL)
+                   - 示例：![生成的图片](http://localhost:8001/generated-images/generated-1234567890-abc123.png)
+                   - 不要只返回URL，必须用完整的Markdown图片语法
+                   - 图片描述应该简洁描述图片内容`,
       messages: convertToModelMessages(messages as UIMessage[]),
       temperature: options.temperature,
       experimental_transform: smoothStream({

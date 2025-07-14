@@ -52,7 +52,7 @@ export function ChatMessages({ messages, status, error, onRegenerate, onAddToolR
         </div>
       </CardHeader>
       <CardContent className="pt-0">
-        <ScrollArea className="h-[calc(100vh-300px)] pr-4" ref={scrollAreaRef}>
+        <ScrollArea className="pr-4" ref={scrollAreaRef}>
           <div className="space-y-4">
             {messages.length === 0 ? (
               <div className="text-muted-foreground py-8 text-center">
