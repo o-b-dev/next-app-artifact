@@ -4,38 +4,39 @@ import { Element, Node, Text } from 'slate'
 /**
  * 将字符串转换为Slate节点
  */
-export const stringToSlateNodes = (text: string): Descendant[] => {
+export const stringToSlateNodes = (text: string, prefix?: string): Descendant[] => {
   // 确保text不为null或undefined
   const safeText = text || ''
 
-  // 如果文本为空，返回一个包含空文本的段落
-  if (safeText === '') {
-    return [{ type: 'paragraph' as const, children: [{ text: '' }] }]
-  }
-
-  const lines = safeText.split('\n')
-
-  // 如果分割后没有行，返回一个空段落
-  if (lines.length === 0) {
-    return [{ type: 'paragraph' as const, children: [{ text: '' }] }]
-  }
+  const lines = safeText === '' ? [''] : safeText.split('\n')
 
   // 为每一行创建段落节点
-  const nodes = lines.map((line) => ({
-    type: 'paragraph' as const,
-    children: [{ text: line || '' }] // 确保每行都有文本，即使是空字符串
-  }))
+  const paragraphs = lines.map((line, index) => {
+    const children: any[] = []
 
-  // 最终检查：确保至少有一个节点
-  if (nodes.length === 0) {
-    return [{ type: 'paragraph' as const, children: [{ text: '' }] }]
-  }
+    // 如果有 prefix 且是第一行，在行首添加 prefix 作为行内元素
+    if (index === 0 && prefix) {
+      children.push({
+        type: 'prefix' as const,
+        prefix,
+        children: [{ text: '' }]
+      })
+    }
 
-  return nodes
+    // 添加文本内容
+    children.push({ text: line || '' })
+
+    return {
+      type: 'paragraph' as const,
+      children
+    }
+  })
+
+  return paragraphs
 }
 
 /**
- * 将Slate节点转换为字符串
+ * 将Slate节点转换为字符串（跳过 prefix 节点）
  */
 export const slateNodesToString = (nodes: Descendant[]): string => {
   if (!nodes || nodes.length === 0) {
@@ -45,7 +46,17 @@ export const slateNodesToString = (nodes: Descendant[]): string => {
   return nodes
     .map((node) => {
       if (Node.isNode(node) && Element.isElement(node) && node.type === 'paragraph') {
-        return node.children.map((child) => (Node.isNode(child) && Text.isText(child) ? child.text : '')).join('')
+        // 过滤掉 prefix 行内元素，只保留文本节点
+        return node.children
+          .filter((child) => {
+            // 跳过 prefix 节点
+            if (Node.isNode(child) && Element.isElement(child) && child.type === 'prefix') {
+              return false
+            }
+            return true
+          })
+          .map((child) => (Node.isNode(child) && Text.isText(child) ? child.text : ''))
+          .join('')
       }
       return ''
     })

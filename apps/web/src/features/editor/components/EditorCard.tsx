@@ -14,6 +14,8 @@ export const EditorCard = ({
   onChange,
   placeholder = '输入一些文本...',
   className = '',
+  prefix,
+  onPrefixRemove,
   title = 'Slate 编辑器 Demo',
   description = '这是一个基于Slate.js构建的受控富文本编辑器示例。支持字符串输入，通过\\n区分换行。'
 }: EditorCardProps) => {
@@ -29,7 +31,14 @@ export const EditorCard = ({
             <label className="text-xs font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 sm:text-sm">
               编辑器
             </label>
-            <SlateEditor value={value} onChange={onChange} placeholder={placeholder} className={className} />
+            <SlateEditor
+              value={value}
+              onChange={onChange}
+              placeholder={placeholder}
+              className={className}
+              prefix={prefix}
+              onPrefixRemove={onPrefixRemove}
+            />
           </div>
           <div className="space-y-2">
             <label className="text-xs font-medium leading-none sm:text-sm">Mock数据</label>

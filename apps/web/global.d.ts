@@ -14,7 +14,9 @@ declare module 'next-intl' {
   }
 }
 
-type CustomElement = { type: 'paragraph'; children: CustomText[] }
+type ParagraphElement = { type: 'paragraph'; children: (CustomText | PrefixInline)[] }
+type PrefixInline = { type: 'prefix'; prefix: string; children: [CustomText] }
+type CustomElement = ParagraphElement | PrefixInline
 type CustomText = { text: string }
 
 declare module 'slate' {

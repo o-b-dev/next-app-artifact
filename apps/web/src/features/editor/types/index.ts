@@ -5,6 +5,8 @@ export interface EditorTextAreaProps {
   onChange?: (value: string) => void
   placeholder?: string
   className?: string
+  prefix?: string // 可选的 prefix 文本
+  onPrefixRemove?: () => void // 删除 prefix 的回调
 }
 
 export interface TextStatsProps {

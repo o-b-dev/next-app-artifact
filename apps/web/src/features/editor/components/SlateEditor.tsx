@@ -5,26 +5,31 @@ import { useCallback, useMemo, useRef, useState } from 'react'
 import type { Descendant } from 'slate'
 import { createEditor } from 'slate'
 import { withHistory } from 'slate-history'
+import type { RenderElementProps } from 'slate-react'
 import { Editable, Slate, withReact } from 'slate-react'
 
 import type { EditorTextAreaProps } from '../types'
 import { slateNodesToString, stringToSlateNodes, validateSlateNodes } from '../utils/slate-utils'
+import { withPrefix } from '../utils/withPrefix'
+import { PrefixElement } from './PrefixElement'
 
 export const SlateEditor = ({
   value,
   onChange,
   placeholder = '输入一些文本...',
-  className = ''
+  className = '',
+  prefix,
+  onPrefixRemove
 }: EditorTextAreaProps) => {
-  const [editor] = useState(() => withReact(withHistory(createEditor())))
+  const [editor] = useState(() => withPrefix(withReact(withHistory(createEditor()))))
 
   // 使用 ref 来跟踪内部状态，避免不必要的重新渲染
   const isInternalChangeRef = useRef(false)
 
-  // 将字符串值转换为 Slate 节点
+  // 将字符串值转换为 Slate 节点（仅在初始化时使用）
   const slateValue = useMemo(() => {
     try {
-      const nodes = stringToSlateNodes(value)
+      const nodes = stringToSlateNodes(value, prefix)
       // 验证节点结构
       if (!nodes || nodes.length === 0) {
         return [{ type: 'paragraph' as const, children: [{ text: '' }] }]
@@ -34,7 +39,20 @@ export const SlateEditor = ({
       console.warn('Error converting to slate nodes:', error)
       return [{ type: 'paragraph' as const, children: [{ text: '' }] }]
     }
-  }, [value])
+    // 只在组件初始化时计算一次
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  // 自定义元素渲染
+  const renderElement = useCallback(
+    (props: RenderElementProps) => {
+      if (props.element.type === 'prefix') {
+        return <PrefixElement {...props} onRemove={onPrefixRemove} />
+      }
+      return <div {...props.attributes}>{props.children}</div>
+    },
+    [onPrefixRemove]
+  )
 
   // 处理编辑器内容变化
   const handleChange = useCallback(
@@ -77,13 +95,9 @@ export const SlateEditor = ({
   )
 
   return (
-    <Slate
-      editor={editor}
-      initialValue={slateValue}
-      onChange={handleChange}
-      key={value} // 使用 key 强制在外部值变化时重新挂载
-    >
+    <Slate editor={editor} initialValue={slateValue} onChange={handleChange} key={prefix || 'no-prefix'}>
       <Editable
+        renderElement={renderElement}
         placeholder={placeholder}
         className={cn(
           'border-input bg-background ring-offset-background min-h-[150px] w-full rounded-md border px-2 py-2 text-xs sm:min-h-[200px] sm:px-3 sm:text-sm',

@@ -6,3 +6,4 @@ export * from './types'
 
 // 导出工具函数
 export * from './utils/slate-utils'
+export * from './utils/withPrefix'

@@ -1,5 +1,6 @@
 export { EditorCard } from './EditorCard'
 export { MockDataButton } from './MockDataButton'
+export { PrefixElement } from './PrefixElement'
 export { SlateEditor } from './SlateEditor'
 export { TextPreview } from './TextPreview'
 export { TextStats } from './TextStats'
