@@ -3,10 +3,10 @@
 import { cn } from '@workspace/ui/lib/utils'
 import { useCallback, useMemo, useRef, useState } from 'react'
 import type { Descendant } from 'slate'
-import { createEditor } from 'slate'
+import { createEditor, Transforms } from 'slate'
 import { withHistory } from 'slate-history'
 import type { RenderElementProps } from 'slate-react'
-import { Editable, Slate, withReact } from 'slate-react'
+import { Editable, ReactEditor, Slate, withReact } from 'slate-react'
 
 import type { EditorTextAreaProps } from '../types'
 import { slateNodesToString, stringToSlateNodes, validateSlateNodes } from '../utils/slate-utils'
@@ -26,10 +26,16 @@ export const SlateEditor = ({
   // 使用 ref 来跟踪内部状态，避免不必要的重新渲染
   const isInternalChangeRef = useRef(false)
 
-  // 将字符串值转换为 Slate 节点（仅在初始化时使用）
+  // 捕获初始值，只在组件首次挂载时使用
+  const initialValueRef = useRef<{ value: string; prefix: string | undefined }>({
+    value,
+    prefix
+  })
+
+  // 将字符串值转换为 Slate 节点（只在组件挂载时计算一次）
   const slateValue = useMemo(() => {
     try {
-      const nodes = stringToSlateNodes(value, prefix)
+      const nodes = stringToSlateNodes(initialValueRef.current.value, initialValueRef.current.prefix)
       // 验证节点结构
       if (!nodes || nodes.length === 0) {
         return [{ type: 'paragraph' as const, children: [{ text: '' }] }]
@@ -39,8 +45,6 @@ export const SlateEditor = ({
       console.warn('Error converting to slate nodes:', error)
       return [{ type: 'paragraph' as const, children: [{ text: '' }] }]
     }
-    // 只在组件初始化时计算一次
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // 自定义元素渲染
@@ -94,6 +98,54 @@ export const SlateEditor = ({
     [onChange, value]
   )
 
+  // 处理编辑器点击，确保焦点在正确位置
+  const handleEditorClick = useCallback(() => {
+    if (prefix) {
+      try {
+        // 如果编辑器没有焦点，将焦点设置到 prefix 后面
+        if (!ReactEditor.isFocused(editor)) {
+          ReactEditor.focus(editor)
+          // 尝试将光标移动到 prefix 后面
+          setTimeout(() => {
+            try {
+              Transforms.select(editor, {
+                anchor: { path: [0, 1, 0], offset: 0 },
+                focus: { path: [0, 1, 0], offset: 0 }
+              })
+            } catch {
+              // 如果路径不存在，不处理
+            }
+          }, 0)
+        }
+      } catch {
+        // 忽略错误
+      }
+    }
+  }, [editor, prefix])
+
+  // 处理焦点事件，确保光标在正确位置
+  const handleEditorFocus = useCallback(() => {
+    if (prefix) {
+      setTimeout(() => {
+        try {
+          const { selection } = editor
+          if (selection) {
+            const [start] = [selection.anchor]
+            // 如果光标在 prefix 位置或之前，移动到 prefix 后面
+            if (start.path[0] === 0 && start.path.length >= 2 && start.path[1] === 0) {
+              Transforms.select(editor, {
+                anchor: { path: [0, 1, 0], offset: 0 },
+                focus: { path: [0, 1, 0], offset: 0 }
+              })
+            }
+          }
+        } catch {
+          // 忽略错误
+        }
+      }, 0)
+    }
+  }, [editor, prefix])
+
   return (
     <Slate editor={editor} initialValue={slateValue} onChange={handleChange} key={prefix || 'no-prefix'}>
       <Editable
@@ -107,6 +159,8 @@ export const SlateEditor = ({
           'resize-none',
           className
         )}
+        onClick={handleEditorClick}
+        onFocus={handleEditorFocus}
         onKeyDown={(event) => {
           // 处理Enter键
           if (event.key === 'Enter') {

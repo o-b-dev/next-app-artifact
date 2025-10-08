@@ -1,5 +1,6 @@
 import type { Editor } from 'slate'
-import { Editor as SlateEditor, Element, Node, Range, Transforms } from 'slate'
+import { Editor as SlateEditor, Element, Node, Range, Text, Transforms } from 'slate'
+import { ReactEditor } from 'slate-react'
 
 /**
  * 检查第一个段落是否有 prefix
@@ -94,6 +95,39 @@ export const withPrefix = (editor: Editor) => {
             return
           }
 
+          // 确保 prefix 后面的节点是文本节点
+          const secondChild = node.children[1]
+          if (!Text.isText(secondChild)) {
+            // 如果第二个子节点不是文本节点，替换为文本节点
+            Transforms.removeNodes(editor, { at: [...path, 1] })
+            Transforms.insertNodes(editor, { text: '' }, { at: [...path, 1] })
+            return
+          }
+
+          // 确保只有两个子节点：prefix 和文本
+          // 如果有多余的节点，移除它们或合并到文本节点
+          if (node.children.length > 2) {
+            // 收集所有额外的文本内容
+            const extraText = node.children
+              .slice(2)
+              .map((child) => (Text.isText(child) ? child.text : ''))
+              .join('')
+
+            // 如果有额外的文本，合并到第二个子节点
+            if (extraText) {
+              const currentText = Text.isText(secondChild) ? secondChild.text : ''
+              Transforms.delete(editor, { at: [...path, 2], distance: node.children.length - 2 })
+              Transforms.insertText(editor, extraText, { at: [...path, 1, currentText.length] })
+              return
+            } else {
+              // 删除多余的节点
+              for (let i = node.children.length - 1; i >= 2; i--) {
+                Transforms.removeNodes(editor, { at: [...path, i] })
+              }
+              return
+            }
+          }
+
           // 完全跳过这个段落的标准化，防止 Slate 的 unwrapNodes 操作
           return
         }
@@ -186,36 +220,97 @@ export const withPrefix = (editor: Editor) => {
   editor.deleteBackward = (unit) => {
     const { selection } = editor
 
-    if (selection && Range.isCollapsed(selection)) {
-      const [start] = Range.edges(selection)
-
-      try {
-        // 检查第一个段落的第一个子节点是否是 prefix
-        const firstParagraphPath = [0]
-        const firstParagraph = Node.get(editor, firstParagraphPath)
-
-        if (Element.isElement(firstParagraph) && firstParagraph.type === 'paragraph') {
-          const firstChild = firstParagraph.children[0]
-
-          // 如果第一个子节点是 prefix
-          if (firstChild && Element.isElement(firstChild) && firstChild.type === 'prefix') {
-            // 检查光标是否在 prefix 之后的第一个位置 [0, 1, 0]
-            if (start.path[0] === 0 && start.path.length === 3 && start.path[1] === 1 && start.offset === 0) {
-              return
-            }
-
-            // 检查光标是否在 prefix 内部 [0, 0]
-            if (start.path[0] === 0 && start.path.length >= 2 && start.path[1] === 0) {
-              return
-            }
-          }
-        }
-      } catch {
-        // 节点不存在，继续正常删除
-      }
+    if (!selection || !Range.isCollapsed(selection)) {
+      deleteBackward(unit)
+      return
     }
 
-    deleteBackward(unit)
+    const [start] = Range.edges(selection)
+
+    // 如果不在第一个段落，继续正常删除
+    if (start.path[0] !== 0 && start.path[0] !== 1) {
+      deleteBackward(unit)
+      return
+    }
+
+    try {
+      // 检查第一个段落的第一个子节点是否是 prefix
+      const firstParagraphPath = [0]
+      const firstParagraph = Node.get(editor, firstParagraphPath)
+
+      if (!Element.isElement(firstParagraph) || firstParagraph.type !== 'paragraph') {
+        deleteBackward(unit)
+        return
+      }
+
+      const firstChild = firstParagraph.children[0]
+
+      // 如果第一个子节点不是 prefix，继续正常删除
+      if (!firstChild || !Element.isElement(firstChild) || firstChild.type !== 'prefix') {
+        deleteBackward(unit)
+        return
+      }
+
+      // 以下是有 prefix 的情况
+
+      // 1. 检查光标是否在 prefix 内部 [0, 0, x]
+      if (start.path[0] === 0 && start.path.length >= 2 && start.path[1] === 0) {
+        // 阻止在 prefix 内部删除
+        return
+      }
+
+      // 2. 检查光标是否在 prefix 之后的第一个文本节点的开头 [0, 1, 0] offset=0
+      if (start.path[0] === 0 && start.path.length === 3 && start.path[1] === 1 && start.offset === 0) {
+        // 阻止删除，这会影响到 prefix
+        return
+      }
+
+      // 3. 检查光标是否在第一个段落的第一个位置（这种情况不应该发生，但保险起见）
+      if (start.path[0] === 0 && start.path.length === 2 && start.path[1] === 1 && start.offset === 0) {
+        // 阻止删除
+        return
+      }
+
+      // 4. 检查是否在第二个段落的开头按退格（即将合并到第一个段落）
+      if (start.path[0] === 1 && start.offset === 0) {
+        // 检查第一个段落的 prefix 后的文本内容
+        const textAfterPrefix = firstParagraph.children[1]
+        if (textAfterPrefix && Text.isText(textAfterPrefix) && textAfterPrefix.text === '') {
+          // 执行正常的删除（合并段落）
+          deleteBackward(unit)
+          // 合并后，确保光标在 prefix 之后
+          setTimeout(() => {
+            try {
+              const afterPrefixNode = Node.get(editor, [0, 1])
+              if (Text.isText(afterPrefixNode)) {
+                Transforms.select(editor, {
+                  anchor: { path: [0, 1, 0], offset: 0 },
+                  focus: { path: [0, 1, 0], offset: 0 }
+                })
+                ReactEditor.focus(editor)
+              }
+            } catch {
+              // 如果路径不存在，尝试重新聚焦
+              try {
+                ReactEditor.focus(editor)
+              } catch {
+                // 忽略错误
+              }
+            }
+          }, 0)
+          return
+        }
+        // 如果第一行有内容，阻止合并，因为这可能导致问题
+        return
+      }
+
+      // 其他情况继续正常删除
+      deleteBackward(unit)
+    } catch (error) {
+      // 发生错误时，为了安全起见阻止删除
+      console.warn('Error in deleteBackward:', error)
+      return
+    }
   }
 
   // 防止前向删除 prefix
@@ -321,13 +416,39 @@ export const withPrefix = (editor: Editor) => {
       return
     }
 
-    // 如果是删除节点的操作，检查是否试图删除 prefix
+    // 如果是删除节点的操作，检查是否试图删除 prefix 或第一个段落
     if (operation.type === 'remove_node') {
       try {
         const node = Node.get(editor, operation.path)
         if (Element.isElement(node) && node.type === 'prefix') {
           // 阻止删除 prefix 节点
           return
+        }
+        // 如果试图删除第一个段落
+        if (operation.path.length === 1 && operation.path[0] === 0) {
+          if (Element.isElement(node) && node.type === 'paragraph') {
+            const firstChild = node.children[0]
+            if (firstChild && Element.isElement(firstChild) && firstChild.type === 'prefix') {
+              // 阻止删除包含 prefix 的第一个段落
+              return
+            }
+          }
+        }
+        // 如果试图删除第一个段落中 prefix 后的文本节点 [0, 1]
+        if (operation.path.length === 2 && operation.path[0] === 0 && operation.path[1] === 1) {
+          // 检查第一个段落是否有 prefix
+          try {
+            const firstParagraph = Node.get(editor, [0])
+            if (Element.isElement(firstParagraph) && firstParagraph.type === 'paragraph') {
+              const firstChild = firstParagraph.children[0]
+              if (firstChild && Element.isElement(firstChild) && firstChild.type === 'prefix') {
+                // 阻止删除 prefix 后的文本节点
+                return
+              }
+            }
+          } catch {
+            // 忽略
+          }
         }
       } catch {
         // 节点可能不存在，继续
@@ -340,6 +461,11 @@ export const withPrefix = (editor: Editor) => {
       if (operation.path[0] === 0 && operation.path.length >= 2 && operation.path[1] === 0) {
         // 操作在 prefix 节点上，阻止
         return
+      }
+      // 如果是合并节点操作，且目标是第一个段落
+      if (operation.type === 'merge_node' && operation.path.length === 1 && operation.path[0] === 1) {
+        // 这会将第二个段落合并到第一个段落，需要特别处理
+        // 允许合并，但确保之后的标准化会修复结构
       }
     }
 
