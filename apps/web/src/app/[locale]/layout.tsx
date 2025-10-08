@@ -37,7 +37,7 @@ export default async function LocaleLayout({
       className={`${fontSans.variable} ${fontMono.variable} font-sans antialiased`}
       suppressHydrationWarning
     >
-      <body suppressHydrationWarning>
+      <body suppressHydrationWarning className="px-8 pt-20">
         <AppProviders>
           <SwitchTheme />
           {children}
