@@ -3,7 +3,7 @@ import { convertToModelMessages, smoothStream, stepCountIs, streamText } from 'a
 import z from 'zod'
 
 import { withAIErrorHandling } from '../../middleware'
-import { getGoogleModel } from '../../utils/model'
+import { getDeepSeekModel } from '../../utils/model'
 import { tools } from '../../utils/tools'
 
 // 输入验证模式
@@ -36,7 +36,7 @@ export const POST = withAIErrorHandling(async (req: Request) => {
     }
 
     // 获取模型配置
-    const model = getGoogleModel()
+    const model = getDeepSeekModel()
 
     // 创建流式响应
     const result = streamText({
