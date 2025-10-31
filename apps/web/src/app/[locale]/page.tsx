@@ -8,8 +8,7 @@ import { Link } from '@/features/i18n'
 const navigationLinks = [
   { href: '/chat', label: 'Chat' },
   { href: '/agent', label: 'Agent' },
-  { href: '/artifact', label: 'Artifact' },
-  { href: '/input', label: 'Input' }
+  { href: '/artifact', label: 'Artifact' }
 ]
 
 export default function HomePage() {
