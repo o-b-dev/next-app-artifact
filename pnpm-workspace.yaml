@@ -4,17 +4,17 @@ packages:
   - configs/*
 
 catalog:
-  '@tailwindcss/postcss': ^4.1.11
-  '@types/node': ^24.0.12
-  '@types/react': ^19.1.8
-  '@types/react-dom': ^19.1.6
-  eslint: ^9.30.1
-  lucide-react: 0.514.0
-  next: ^15.3.5
-  react: ^19.1.0
-  react-dom: ^19.1.0
-  tailwind-variants: ^1.0.0
-  tailwindcss: ^4.1.11
-  tw-animate-css: ^1.3.5
-  typescript: 5.7.3
+  '@tailwindcss/postcss': latest
+  '@types/node': latest
+  '@types/react': latest
+  '@types/react-dom': latest
+  eslint: latest
+  lucide-react: latest
+  next: latest
+  react: latest
+  react-dom: latest
+  tailwind-variants: latest
+  tailwindcss: latest
+  tw-animate-css: latest
+  typescript: latest
   zod: ^3.25.76
